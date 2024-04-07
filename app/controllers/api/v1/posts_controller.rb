@@ -3,16 +3,17 @@
 module API
   module V1
     class Api::V1::PostsController < ::ApplicationController
-      before_action :set_post, only: [:show, :update, :destroy]
+      before_action :set_post, only: [:update, :destroy]
 
       # GET /posts
       def index
-        @posts = Post.all
+        @posts = policy_scope(Post).all
         render json: { data: @posts, success: true }, status: :ok
       end
 
       # GET /posts/1
       def show
+        @post = policy_scope(Post).find(params[:id])
         render json: { data: @post, success: true }, status: :ok
       end
 
@@ -46,12 +47,12 @@ module API
       # Use callbacks to share common setup or constraints between actions.
       def set_post
         @post = Post.find(params[:id])
-        puts @post
+        authorize @post
       end
 
       # Only allow a list of trusted parameters through.
       def post_params
-        params.require(:post).permit(:content, :title, :author)
+        params.require(:post).permit(:content, :title, :author, :user_id)
       end
     end
   end

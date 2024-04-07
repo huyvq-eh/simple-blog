@@ -1,2 +1,5 @@
 class ApplicationController < ActionController::API
+  include ErrorHandling
+  rescue_from ActiveRecord::RecordNotFound, with: :render_record_not_found!
+
 end

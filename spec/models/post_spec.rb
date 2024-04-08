@@ -33,5 +33,17 @@ RSpec.describe Post, type: :model do
       expect(@nil_post.errors.messages[:title]).to include("can't be blank")
       expect(@nil_post.errors.messages[:content]).to include("can't be blank")
     end
+
+    it "delete all comments when post is deleted" do
+      FactoryBot.create_list(:comment, 2, post: @post, user: @user)
+      @post.destroy
+      expect(Comment.count).to eq 0
+    end
+
+    it "always has the content" do
+      @post.content = nil
+      expect(@post).to be_invalid
+      expect(@post.errors.messages[:content]).to include("can't be blank")
+    end
   end
 end

@@ -4,6 +4,8 @@ module API
   module V1
     class Api::V1::PostsController < ::ApplicationController
       before_action :set_post, only: [:update, :destroy]
+      before_action :authenticate_user_token!
+
 
       # GET /posts
       def index
@@ -19,7 +21,7 @@ module API
 
       # POST /posts
       def create
-        @post = Post.new(post_params)
+        @post = current_user.post.new(post_params)
         if @post.save
           render json: { data: @post, success: true }, status: :created
         else
@@ -46,7 +48,11 @@ module API
 
       # Use callbacks to share common setup or constraints between actions.
       def set_post
-        @post = Post.find(params[:id])
+        unless current_user
+          render json: { error: 'Permission denied', success: false }, status: :forbidden
+          return
+        end
+        @post = current_user.post.find(params[:id])
         authorize @post
       end
 

@@ -48,3 +48,5 @@ gem "pundit", "~> 2.3"
 
 gem "devise", "~> 4.9"
 gem "devise-jwt"
+gem "grape"
+gem 'grape_on_rails_routes'

@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
 
-  resources :users
   namespace :api do
     namespace :v1 do
-      resources :posts
+      resources :posts do
+        mount V1::Comments => '/'
+
+      end
+
       devise_for :users, controllers: {
         sessions: "users/sessions",
         registrations: "users/registrations"

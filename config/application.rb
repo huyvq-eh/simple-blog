@@ -42,5 +42,11 @@ module SimpleBlog
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    EhProtobuf.config_client(
+      EhProtobuf::EmploymentHero,
+      host: 'localhost',
+      port: 50053,
+      timeout: 3
+    )
   end
 end

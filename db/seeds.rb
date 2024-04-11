@@ -1,5 +1,5 @@
 User.create!(
-  email: 'admin@gmail.com',
+  email: 'alexia.c@employmentinnovations.com',
   password: 'password',
   password_confirmation: 'password',
   admin: true

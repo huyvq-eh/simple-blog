@@ -22,6 +22,11 @@ gem 'puma', '~> 5.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
+source 'https://gem.fury.io/eh-devops/' do
+  gem 'eh_protobuf', path: '../grpc_proto/lib/ruby'
+  gem 'eh_protobuf_core', '~> 2.8.1'
+end
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 

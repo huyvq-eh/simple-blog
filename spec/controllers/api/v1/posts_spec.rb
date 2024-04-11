@@ -15,7 +15,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
     end
     context "when the user is authenticated" do
       context "when the user is admin" do
-        it "return all posts" do
+        it "returns all posts" do
           get path, headers: { 'Authorization': admin.auth_token }, as: :json
           expect(response).to have_http_status(:ok)
           expect(parse_response['data'].size).to eq 3
@@ -24,7 +24,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
       end
 
       context "when the user is not admin" do
-        it "return published posts" do
+        it "returns published posts" do
           get path, headers: headers, as: :json
           expect(response).to have_http_status(:ok)
           expect(parse_response['data'].size).to eq 0
@@ -34,7 +34,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
     end
 
     context "when the user is not authenticated" do
-      it "return a forbidden response" do
+      it "returns a forbidden response" do
         get path, headers: invalid_headers, as: :json
         expect(response).to have_http_status :forbidden
         expect(parse_response['error']).to eq 'Permission denied'
@@ -46,7 +46,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
 
   describe "GET /show", type: :request do
     context "when the user is authenticated" do
-      it "return the requested post" do
+      it "returns the requested post" do
         @post = FactoryBot.create :post, published: false
         get "#{path}/#{@post[:id]}", headers: { 'Authorization': admin.auth_token }, as: :json
         expect(response).to have_http_status(:ok)
@@ -55,7 +55,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
       end
 
       context "when the post is not found" do
-        it "return a not found response" do
+        it "returns a not found response" do
           get "#{path}/#{not_found_post}", headers: headers, as: :json
           expect(response).to have_http_status :not_found
           expect(parse_response['error']).to eq 'Not found'
@@ -65,7 +65,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
     end
 
     context "when the user is not authenticated" do
-      it "return a forbidden response" do
+      it "returns a forbidden response" do
         @post = FactoryBot.create :post, published: false
         get "#{path}/#{@post[:id]}", headers: invalid_headers, as: :json
         expect(response).to have_http_status :forbidden
@@ -78,7 +78,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
 
   describe "POST /create", type: :request do
     context "when the user is not authenticated" do
-      it "return a forbidden response" do
+      it "returns a forbidden response" do
         post path, headers: invalid_headers
         expect(response).to have_http_status :forbidden
         expect(parse_response['error']).to eq 'Permission denied'
@@ -97,7 +97,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
           expect(Post.count).to eq 1
         end
 
-        it "return a JSON response with the new post" do
+        it "returns a JSON response with the new post" do
           expect(response).to have_http_status(:created)
           expect(parse_response['data']['title']).to eq @post[:title]
           expect(parse_response['success']).to eq true
@@ -114,7 +114,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
           expect(Post.count).to eq 0
         end
 
-        it "return a JSON response with errors for the new post" do
+        it "returns a JSON response with errors for the new post" do
           expect(response).to have_http_status(:unprocessable_entity)
           expect(parse_response['success']).to eq false
           expect(parse_response['errors']).to eq "Bad request"
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
 
   describe "PUT /update", type: :request do
     context "when the user is not authenticated" do
-      it "return a forbidden response" do
+      it "returns a forbidden response" do
         put "#{path}/#{not_found_post}", headers: invalid_headers
         expect(response).to have_http_status :forbidden
         expect(parse_response['error']).to eq 'Permission denied'
@@ -149,7 +149,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
             expect(@post[:title]).to eq "New title"
           end
 
-          it "return a JSON response with the updated post" do
+          it "returns a JSON response with the updated post" do
             expect(response).to have_http_status(:ok)
             expect(parse_response['data']['title']).to eq "New title"
             expect(parse_response['success']).to eq true
@@ -166,7 +166,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
             expect(@post[:title]).to eq @post[:title]
           end
 
-          it "return a JSON response with errors for the new post" do
+          it "returns a JSON response with errors for the new post" do
             expect(response).to have_http_status(:unprocessable_entity)
             expect(parse_response['success']).to eq false
             expect(parse_response['errors']).to eq 'Bad request'
@@ -175,7 +175,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
       end
 
       context "when the post is not found" do
-        it "return a not found response" do
+        it "returns a not found response" do
           put "#{path}/#{not_found_post}", headers: headers
           expect(response).to have_http_status :not_found
           expect(parse_response['error']).to eq 'Not found'
@@ -192,7 +192,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
     end
 
     context "when the user is not authenticated" do
-      it "return a forbidden response" do
+      it "returns a forbidden response" do
         delete "#{path}/#{@post[:id]}", headers: invalid_headers
         expect(response).to have_http_status :forbidden
         expect(parse_response['error']).to eq 'Permission denied'
@@ -210,7 +210,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
       end
 
       context "when the post is not found" do
-        it "return a not found response" do
+        it "returns a not found response" do
           delete "#{path}/#{not_found_post}", headers: headers
           expect(response).to have_http_status :not_found
           expect(parse_response['error']).to eq 'Not found'

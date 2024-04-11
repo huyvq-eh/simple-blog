@@ -3,13 +3,12 @@
 module API
   module V1
     class Api::V1::PostsController < ::ApplicationController
-      before_action :set_post, only: [:update, :destroy]
       before_action :authenticate_user_token!
-
+      before_action :set_post, only: [:update, :destroy]
 
       # GET /posts
       def index
-        @posts = policy_scope(Post).all
+        @posts = policy_scope(Post)
         render json: { data: @posts, success: true }, status: :ok
       end
 
@@ -21,6 +20,10 @@ module API
 
       # POST /posts
       def create
+        unless user_is_admin?(current_user.email)
+          render json: { error: 'Permission denied', success: false }, status: :forbidden
+          return
+        end
         @post = current_user.post.new(post_params)
         if @post.save
           render json: { data: @post, success: true }, status: :created
@@ -58,8 +61,16 @@ module API
 
       # Only allow a list of trusted parameters through.
       def post_params
-        params.require(:post).permit(:content, :title, :author, :user_id)
+        params.require(:post).permit(:content, :title, :user_id)
       end
+
+      def user_is_admin?(email)
+        response = EhProtobuf::EmploymentHero::Client
+                     .cached(valid_for: 5.minutes)
+                     .check_user_is_admin_or_not(user_email: email)
+        response.message.admin == true ? true : false
+      end
+
     end
   end
 end

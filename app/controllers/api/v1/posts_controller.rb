@@ -68,7 +68,7 @@ module API
         response = EhProtobuf::EmploymentHero::Client
                      .cached(valid_for: 5.minutes)
                      .check_user_is_admin_or_not(user_email: email)
-        response.message.admin == true ? true : false
+        response.message.admin ? true : false
       end
 
     end

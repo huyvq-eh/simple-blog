@@ -35,6 +35,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'
   gem "factory_bot_rails"
   gem "faker"
+  gem 'dotenv-rails'
   gem 'bullet'
   gem 'database_cleaner'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -55,3 +56,5 @@ gem "devise", "~> 4.9"
 gem "devise-jwt"
 gem "grape"
 gem 'grape_on_rails_routes'
+
+gem "karafka", ">= 2.3.0"

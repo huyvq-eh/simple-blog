@@ -27,6 +27,7 @@ module API
         @post = current_user.post.new(post_params)
         if @post.save
           render json: { data: @post, success: true }, status: :created
+          PublishPostJob.perform_in(1.hour, @post.id)
         else
           render json: { errors: "Bad request", success: false }, status: :unprocessable_entity
         end
@@ -65,10 +66,16 @@ module API
       end
 
       def user_is_admin?(email)
-        response = EhProtobuf::EmploymentHero::Client
-                     .cached(valid_for: 5.minutes)
-                     .check_user_is_admin_or_not(user_email: email)
-        response.message.admin ? true : false
+        begin
+          response = EhProtobuf::EmploymentHero::Client
+                       .cached(valid_for: 5.minutes)
+                       .check_user_is_admin_or_not(user_email: email)
+          p response
+
+          response.message.admin ? true : false
+        rescue Exception
+          false
+        end
       end
 
     end
